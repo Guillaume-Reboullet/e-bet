@@ -1,5 +1,29 @@
 # PostgreSQL Commands
 
+## Main commands
+
+### Postgre SuperUser
+```bash
+sudo -i -u postgres
+```
+### Access Postgre
+```bash
+psql
+```
+### Grant Privileges
+```bash
+GRANT ALL PRIVILEGES ON DATABASE database_name TO your_username;
+```
+### Exit psql 
+```bash
+\q
+```
+
+### Postgre SuperUser
+```bash
+sudo -i -u postgres
+```
+
 ## Database Commands
 
 ### Create Database
