@@ -7,7 +7,7 @@ import { User } from '../../user/user.entity';
 import { Game } from '../../game/game.entity';
 import { Region } from '../../region/region.entity';
 import { League } from '../../league/league.entity';
-import { Match } from '../..//match/match.entity';
+import { Match } from '../../match/match.entity';
 import { Bet } from '../../bet/bet.entity';
 import * as dotenv from 'dotenv'
 

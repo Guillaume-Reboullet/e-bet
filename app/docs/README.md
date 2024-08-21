@@ -16,4 +16,3 @@ expo start
 ```
 
 ### if there is any error, try to follow the expo recommended command or contact me at guillaume.reboullet@epitech.eu or at https://guillaume-reboullet.com
-

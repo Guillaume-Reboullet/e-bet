@@ -8,7 +8,7 @@ import { User } from '../../user/user.entity';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
-    @UseGuards(new LocalAuthGuard('admin'))
+    // @UseGuards(new LocalAuthGuard('admin'))
     @Post('login')
     async login(@Request() req) {
         return this.authService.login(req.user);

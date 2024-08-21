@@ -25,6 +25,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
+  //SESSION
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
@@ -36,6 +37,7 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.enableCors();
   
   await app.listen(3000);
 }
