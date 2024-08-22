@@ -17,27 +17,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Esports',
+          title: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'game-controller' : 'game-controller-outline'} color={color} />
+            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="bets"
+        name="explore"
         options={{
-          title: 'Bets',
+          title: 'Explore',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'dice' : 'dice-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="wallet"
-        options={{
-          title: 'Wallet',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'wallet' : 'wallet-outline'} color={color} />
+            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
         }}
       />

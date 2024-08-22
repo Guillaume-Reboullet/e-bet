@@ -28,14 +28,14 @@ export class LocalAuthGuard extends AuthGuard('local') {
         }
     }
 
-    handleRequest(err, user, info, context: ExecutionContext) {
+    handleRequest(err, user, info, _context: ExecutionContext) {
         if (err) {
-            this.logger.error('Error during authentication', err.stack);
+            this.logger.error(`Error during authentication ${err.stack}`);
             throw err;
         }
 
         if (!user) {
-            this.logger.warn('Authentication failed: No user found', info);
+            this.logger.warn(`Authentication failed: No user found ${info}`);
             throw new UnauthorizedException('Invalid credentials');
         }
 
@@ -50,14 +50,14 @@ export class LocalAuthGuard extends AuthGuard('local') {
 
     private handleActivationError(error: any) {
         if (error instanceof UnauthorizedException) {
-            this.logger.warn('Unauthorized access attempt', error.stack);
-            throw new UnauthorizedException('Unauthorized access');
+            this.logger.warn(`Unauthorized access attemp ${error.stack}`);
+            throw new UnauthorizedException(`Unauthorized access => ${error}`);
         } else if (error instanceof ForbiddenException) {
-            this.logger.warn('Forbidden access attempt', error.stack);
-            throw new ForbiddenException('Forbidden access');
+            this.logger.warn(`Forbidden access attempt ${error.stack}`);
+            throw new ForbiddenException(`Forbidden access => ${error}`);
         } else {
-            this.logger.error('Unexpected error during authentication', error.stack);
-            throw new UnauthorizedException('Unexpected error during authentication');
+            this.logger.error(`Unexpected error during authentication ${error.stack}`);
+            throw new UnauthorizedException(`Unexpected error during authentication => ${error}`);
         }
     }
 }
