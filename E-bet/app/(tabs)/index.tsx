@@ -8,20 +8,6 @@ import SearchBar from "@/components/reusable/searchBar";
 import Header from "@/components/reusable/header";
 
 export default function HomeScreen() {
-  // const [data, setData] = useState();
-
-  // const getMovies = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:3000/");
-  //     const json = await response.json();
-  //     setData(json.movies);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // getMovies();
-  // console.log(data);
   return (
     <ThemedView style={styles.header}>
       <ThemedView>
