@@ -11,20 +11,49 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import Checkbox from "expo-checkbox";
+import { validate, res } from "email-validator";
 
 import { useState } from "react";
+import url from "@/config";
 
 const { height } = Dimensions.get("window");
 const windowWidth = Dimensions.get("window").width;
 
-export default function SignUp({ onClose }) {
+export default function SignUp({ onClose, openLogin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isChecked, setChecked] = useState(false);
+  const [verify, setVerify] = useState(false);
 
-  const handleSubmit = () => {};
+  const checkEmail = (email) => {
+    setEmail(email);
+    if (validate(email)) {
+      setVerify(true);
+    } else {
+      setVerify(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const formData = {
+      username: username,
+      email: email,
+      password: password,
+      role: "user",
+    };
+
+    const response = await fetch(`${url}/users`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      openLogin();
+    }
+  };
 
   return (
     <ThemedView style={styles.ModalContainer}>
@@ -51,10 +80,10 @@ export default function SignUp({ onClose }) {
         />
 
         <TextInput
-          style={styles.input}
+          style={verify ? styles.inputVerify : styles.inputNotVerify}
           placeholder="Email"
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => checkEmail(text)}
         />
 
         <TextInput
@@ -65,7 +94,7 @@ export default function SignUp({ onClose }) {
           secureTextEntry={true}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
           <Text style={styles.center}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -87,6 +116,22 @@ const styles = StyleSheet.create({
     width: windowWidth - 50,
     borderWidth: 1,
     borderColor: "black",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+  },
+  inputVerify: {
+    width: windowWidth - 50,
+    borderWidth: 1,
+    borderColor: "green",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+  },
+  inputNotVerify: {
+    width: windowWidth - 50,
+    borderWidth: 1,
+    borderColor: "red",
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,

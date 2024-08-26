@@ -11,9 +11,13 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import Checkbox from "expo-checkbox";
 
 import { useState } from "react";
+import { router } from "expo-router";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Checkbox from "expo-checkbox";
+import url from "@/config";
 
 const { height } = Dimensions.get("window");
 const windowWidth = Dimensions.get("window").width;
@@ -23,7 +27,25 @@ export default function Login({ onClose }) {
   const [password, setPassword] = useState("");
   const [isChecked, setChecked] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    const formData = {
+      username: username,
+      password: password,
+    };
+
+    console.log(formData);
+    const response = await fetch(`${url}/auth/login`, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      await AsyncStorage.setItem("token", data.access_token);
+      onClose();
+    }
+  };
 
   return (
     <ThemedView style={styles.ModalContainer}>
@@ -36,11 +58,14 @@ export default function Login({ onClose }) {
         }}
         onPress={onClose}
       />
+
       <View style={styles.container}>
         <View style={styles.flex}>
           <Image source={require("@/assets/images/favicon.png")} />
           <Text>E-bet</Text>
         </View>
+
+        <Text style={styles.marginBottom}>Login</Text>
 
         <TextInput
           style={styles.input}
@@ -57,7 +82,7 @@ export default function Login({ onClose }) {
           secureTextEntry={true}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
           <Text style={styles.center}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -131,5 +156,8 @@ const styles = StyleSheet.create({
   },
   label: {
     margin: 8,
+  },
+  marginBottom: {
+    marginBottom: 25,
   },
 });
