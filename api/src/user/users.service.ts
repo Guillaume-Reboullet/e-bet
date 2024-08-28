@@ -42,9 +42,14 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<Omit<CreateUserDto, 'password'>> {
     await this.usersRepository.update(id, updateUserDto);
-    return this.findOne(id);
+    const user = await this.findOne(id);
+    if (user) {
+      const { password, ...result } = user;
+      return result as Omit<CreateUserDto, 'password'>;
+  }
+  return null;
   }
 
   async remove(id: number): Promise<void> {

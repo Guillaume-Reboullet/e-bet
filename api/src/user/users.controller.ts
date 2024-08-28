@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, NotFoundException, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, NotFoundException, BadRequestException, InternalServerErrorException, Logger, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
+import { Public } from 'src/auth/decorator/public.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -30,61 +31,35 @@ export class UsersController {
     }
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user by ID' })
-  @ApiParam({ name: 'id', type: 'number', description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'Returns the user with the specified ID.', type: User })
-  @ApiResponse({ status: 404, description: 'User not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid user ID format.' })
-  async findOne(@Param('id') id: number): Promise<User> {
-    if (isNaN(id)) {
-      this.logger.warn(`Invalid user ID format: ${id}`);
-      throw new BadRequestException(`Invalid user ID format: ${id}`);
-    }
-    try {
-      const user = await this.usersService.findOne(id);
-      if (!user) {
-        this.logger.warn(`User with ID ${id} not found.`);
-        throw new NotFoundException(`User with ID ${id} not found.`);
-      }
-      return user;
-    } catch (error) {
-      this.logger.error(`Error retrieving user with ID ${id}`, error.stack);
-      throw new InternalServerErrorException(`Error retrieving user with ID ${id}`);
-    }
-  }
+  //REPLACE THIS ROUTE BY A @GET(password/:id) 
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 201, description: 'The user has been successfully created.', type: User })
-  @ApiResponse({ status: 400, description: 'Invalid input.' })
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    try {
-      if (!createUserDto.username) {
-        this.logger.warn('Invalid input: username is required.');
-        throw new BadRequestException('Invalid input: username is required.');
-      }
-      if (!createUserDto.email) {
-        this.logger.warn('Invalid input: email is required.');
-        throw new BadRequestException('Invalid input: email is required.');
-      }
-      if (!createUserDto.password) {
-        this.logger.warn('Invalid input: password is required.');
-        throw new BadRequestException('Invalid input: password is required.');
-      }
-      if (!['admin', 'organizer', 'user'].includes(createUserDto.role)) {
-        this.logger.warn(`Invalid input: role must be one of 'admin', 'organizer', 'user'. Provided: ${createUserDto.role}`);
-        throw new BadRequestException(`Invalid input: role must be one of 'admin', 'organizer', 'user'. Provided: ${createUserDto.role}`);
-      }
-      return await this.usersService.create(createUserDto);
-    } catch (error) {
-      this.logger.error('Error creating user', error.stack);
-      if (error instanceof SyntaxError && error.message.includes('Unexpected token')) {
-        throw new BadRequestException('Invalid JSON format.');
-      }
-      throw new InternalServerErrorException('Error creating user');
-    }
+  // @Get(':id')
+  // @ApiOperation({ summary: 'Get user by ID' })
+  // @ApiParam({ name: 'id', type: 'number', description: 'User ID' })
+  // @ApiResponse({ status: 200, description: 'Returns the user with the specified ID.', type: User })
+  // @ApiResponse({ status: 404, description: 'User not found.' })
+  // @ApiResponse({ status: 400, description: 'Invalid user ID format.' })
+  // async findOne(@Param('id') id: number): Promise<User> {
+  //   if (isNaN(id)) {
+  //     this.logger.warn(`Invalid user ID format: ${id}`);
+  //     throw new BadRequestException(`Invalid user ID format: ${id}`);
+  //   }
+  //   try {
+  //     const user = await this.usersService.findOne(id);
+  //     if (!user) {
+  //       this.logger.warn(`User with ID ${id} not found.`);
+  //       throw new NotFoundException(`User with ID ${id} not found.`);
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     this.logger.error(`Error retrieving user with ID ${id}`, error.stack);
+  //     throw new InternalServerErrorException(`Error retrieving user with ID ${id}`);
+  //   }
+  // }
+
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 
   @Put(':id')
@@ -94,7 +69,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'The user has been successfully updated.', type: User })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<Omit<CreateUserDto, 'password'>> {
     if (isNaN(id)) {
       this.logger.warn(`Invalid user ID format: ${id}`);
       throw new BadRequestException(`Invalid user ID format: ${id}`);

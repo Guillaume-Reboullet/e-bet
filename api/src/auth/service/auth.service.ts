@@ -36,8 +36,9 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any) {
-        const payload = { username: user.username, sub: user.id };
+    async login(user: User) {
+        console.log(`user obj for payload => ${user}`)
+        const payload = { username: user.username, id: user.id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
         };
@@ -45,7 +46,6 @@ export class AuthService {
 
     async register(createUserDto: CreateUserDto): Promise<User> {
         const user = await this.usersService.create(createUserDto);
-
         return user;
     }
 }
