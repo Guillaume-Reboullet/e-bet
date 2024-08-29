@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -7,14 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-
-import { useState } from "react";
-import { router } from "expo-router";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Checkbox from "expo-checkbox";
 import url from "@/config";
@@ -22,7 +16,7 @@ import url from "@/config";
 const { height } = Dimensions.get("window");
 const windowWidth = Dimensions.get("window").width;
 
-export default function Login({ onClose }) {
+export default function Login({ onClose, onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -33,7 +27,6 @@ export default function Login({ onClose }) {
       password: password,
     };
 
-    console.log(formData);
     const response = await fetch(`${url}/auth/login`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -43,12 +36,14 @@ export default function Login({ onClose }) {
     if (response.ok) {
       const data = await response.json();
       await AsyncStorage.setItem("token", data.access_token);
+
+      onLoginSuccess();
       onClose();
     }
   };
 
   return (
-    <ThemedView style={styles.ModalContainer}>
+    <View style={styles.ModalContainer}>
       <TabBarIcon
         name={"close"}
         style={{
@@ -82,7 +77,7 @@ export default function Login({ onClose }) {
           secureTextEntry={true}
         />
 
-        <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.center}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -98,7 +93,7 @@ export default function Login({ onClose }) {
         </View>
         <Text>I forgot my password</Text>
       </View>
-    </ThemedView>
+    </View>
   );
 }
 

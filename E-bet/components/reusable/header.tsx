@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -7,15 +8,11 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-
 import Login from "@/components/auth/login";
 import SignUp from "@/components/auth/signUp";
 import ModalProfil from "@/components/modalUser/modalProfil";
-
 import { ThemedView } from "@/components/ThemedView";
 import { FontAwesome6 } from "@expo/vector-icons";
-
-import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const windowWidth = Dimensions.get("window").width;
@@ -28,11 +25,8 @@ export default function Header() {
 
   useEffect(() => {
     const fetchStorage = async () => {
-      if (await AsyncStorage.getItem("token")) {
-        setLog(true);
-      } else {
-        setLog(false);
-      }
+      const token = await AsyncStorage.getItem("token");
+      setLog(!!token);
     };
     fetchStorage();
   }, []);
@@ -56,6 +50,15 @@ export default function Header() {
     setModalProfil(true);
   };
 
+  const handleLoginSuccess = () => {
+    setLog(true);
+  };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("token");
+    setLog(false);
+  };
+
   return (
     <>
       <Modal
@@ -65,7 +68,7 @@ export default function Header() {
         animationType="slide"
       >
         <View style={styles.modalOverlay}>
-          <ModalProfil onClose={close} />
+          <ModalProfil onClose={close} onLogout={handleLogout} />
         </View>
       </Modal>
 
@@ -76,8 +79,8 @@ export default function Header() {
         animationType="slide"
       >
         <View style={styles.modalOverlay}>
-          {modalToShow == "login" ? (
-            <Login onClose={close} />
+          {modalToShow === "login" ? (
+            <Login onClose={close} onLoginSuccess={handleLoginSuccess} />
           ) : (
             <SignUp onClose={close} openLogin={openLogin} />
           )}
@@ -91,11 +94,9 @@ export default function Header() {
           <FontAwesome6 name="earth-asia" size={25} />
 
           {log ? (
-            <>
-              <TouchableOpacity onPress={() => openUser()}>
-                <FontAwesome6 name="user" size={25} />
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity onPress={openUser}>
+              <FontAwesome6 name="user" size={25} />
+            </TouchableOpacity>
           ) : (
             <>
               <TouchableOpacity
