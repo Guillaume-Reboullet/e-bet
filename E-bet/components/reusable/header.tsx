@@ -10,6 +10,7 @@ import {
 
 import Login from "@/components/auth/login";
 import SignUp from "@/components/auth/signUp";
+import ModalProfil from "@/components/modalUser/modalProfil";
 
 import { ThemedView } from "@/components/ThemedView";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -29,6 +30,8 @@ export default function Header() {
     const fetchStorage = async () => {
       if (await AsyncStorage.getItem("token")) {
         setLog(true);
+      } else {
+        setLog(false);
       }
     };
     fetchStorage();
@@ -62,12 +65,7 @@ export default function Header() {
         animationType="slide"
       >
         <View style={styles.modalOverlay}>
-          {/* {modalToShow == "login" ? (
-            <Login onClose={close} />
-          ) : (
-            <SignUp onClose={close} openLogin={openLogin} />
-          )} */}
-          <Text>TESTZESRDTFYGUHJNK?L</Text>
+          <ModalProfil onClose={close} />
         </View>
       </Modal>
 
