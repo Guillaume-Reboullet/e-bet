@@ -86,7 +86,7 @@ export default function Header() {
 
       <ThemedView style={styles.container}>
         <View style={styles.flex}>
-          <Image source={require("@/assets/images/favicon.png")} />
+          <Image source={require("@/assets/images/logo/logo_ebet.png")} />
           <Text>E-bet</Text>
           <FontAwesome6 name="earth-asia" size={25} />
 

@@ -8,7 +8,7 @@ export default function Profil() {
       <View>
         <TouchableOpacity>
           <Image
-            source={require("@/assets/images/avatar-1.png")}
+            source={require("@/assets/images/avatar/avatar-1.png")}
             style={styles.img}
           />
         </TouchableOpacity>
