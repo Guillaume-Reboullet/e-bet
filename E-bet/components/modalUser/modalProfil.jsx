@@ -72,7 +72,7 @@ export default function ModalProfil({ onClose }) {
       <View style={styles.padding20}>
         <View style={styles.flex}>
           <Image
-            source={require("@/assets/images/default-avatar.png")}
+            source={require("@/assets/images/avatar/default-avatar.png")}
             style={styles.img}
           />
           <View style={styles.pl10}>
